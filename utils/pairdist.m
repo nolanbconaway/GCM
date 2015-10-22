@@ -4,9 +4,9 @@ function D = pairdist(A, B, METRIC, varargin)
 % 	This function computes the cityblock or euclidean distance 
 % 	between the rows of A and B. An optional parameter, WTS, can be 
 % 	provided to differentially weigh the columns of A and B in the 
-% 	calculation of distance. WTS must be a row vector that sums to 1 
-% 	(and will otherwise be normalized). A. B, and WTS must have the 
-% 	same number of columns.
+% 	calculation of distance. WTS must be a row vector that should sum
+%	to 1, though this is not a hard constraint.  A. B, and WTS must 
+%	have the same number of columns.
 % 
 % Usage:
 %	A = [ 1 2
@@ -42,12 +42,6 @@ function D = pairdist(A, B, METRIC, varargin)
 	if ~isempty(varargin)
 		WTS = varargin{1};
 		
-		% confirm weights are normalized
-		if sum(WTS)~=1
-% 			warning(['WTS do not sum to 1 (sum=' num2str(sum(WTS),10) '). Normalizing...'])
-			WTS = WTS./sum(WTS);
-		end
-		
 		% confirm weights are the correct size
 		if ~isequal(size(A,2),size(WTS,2))
 			error('A and B, and WTS must have the same number of columns.')
@@ -55,6 +49,7 @@ function D = pairdist(A, B, METRIC, varargin)
 		if size(WTS,1)>1
 			error('WTS must be a row vector.')
 		end
+		
 	else
 		WTS = ones(1,size(A,2));
 	end

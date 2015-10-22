@@ -78,7 +78,5 @@ categoryactivation = similarity * memorystrength;
 categoryactivation = categoryactivation .^ responsemapping;
 
 % calculate classification probabilities via Luce's (1963) choice rule
-probability = categoryactivation ./ ...
-	repmat(sum(categoryactivation,2), [1,numcategories]);
-
+probability = bsxfun(@rdivide,categoryactivation,sum(categoryactivation,2));
 end
