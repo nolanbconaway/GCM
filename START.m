@@ -21,9 +21,8 @@ model = struct;
   model.responsemapping	 = 1; % response bias (phi) parameter
   model.distancemetric	 = 'cityblock'; % 'cityblock' or 'euclidean'
 
-  % vector of feature weights (should sum to 1)
-  model.attentionweights = [0.3187    0.0712    0.3006    0.3095]; 
-
+  % vector of feature weights (must sum to 1, will be normalized othwerwise)  
+  model.attentionweights =  [0.3187    0.0713    0.3006    0.3095];
 %  ---------------------------------------------------------------------  %
 %  SET UP MODEL INPUT (EXEMPLARS, LABELS, TRANSFER)
 %  ---------------------------------------------------------------------  %

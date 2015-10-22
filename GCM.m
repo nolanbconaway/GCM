@@ -51,14 +51,9 @@ elseif strcmp(distancemetric,'euclidean')
 else error('ERROR: Distance metric must be "cityblock" or "euclidean".')
 end    
 
-% scale attention to sum = 1
-attentionweights = attentionweights./sum(attentionweights);
-attentionweights = repmat(attentionweights,[numexemplars,1]);
-
 % scale memory strengths so each row sums to 1.
 memorystrength = memorystrength ./ ...
 	repmat(sum(memorystrength,2),[1,numcategories]);
-
 
 % set up response mapping constant
 if ~exist('responsemapping','var')
@@ -68,16 +63,11 @@ end
 %***************************** Run Simulation ****************************%
 %-------------------------------------------------------------------------%
 % get weighted similarity of all inputs to all exemplars
-distances = zeros(numinputs,numexemplars);
-for i = 1:numinputs
-    d = abs(repmat(inputs(i,:),[numexemplars,1]) - exemplars) .^ r;
-    d = sum(d.* attentionweights,2);
-    distances(i,:) = d .^ (1/r);    
-end
+distances = pairdist(inputs,exemplars,distancemetric,attentionweights);
 
 % Similarity is an inverse exponential function of distance, following
 % Shepard's (1957,1987) universal law of generalization.
-similarity = exp(-specificity .* distances);
+similarity = exp((-specificity) .* distances);
 
 % Multiply similarity values against memory strengths. 
 % This calculation returns activation of each category given each input.
