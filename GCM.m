@@ -41,15 +41,10 @@ numcategories = size(memorystrength,2);
 if ~exist('inputs','var')
     inputs = exemplars;
 end
-numinputs = size(inputs,1);
+numinputs = size(inputs,1); 
 
-% set up distance function
-if strcmp(distancemetric,'cityblock')
-    r = 1;
-elseif strcmp(distancemetric,'euclidean')
-    r = 2;
-else error('ERROR: Distance metric must be "cityblock" or "euclidean".')
-end    
+% scale attention to sum = 1, as per Nosofsky (1986)
+attentionweights = attentionweights ./ sum(attentionweights,2);
 
 % scale memory strengths so each row sums to 1.
 memorystrength = memorystrength ./ ...
@@ -73,8 +68,7 @@ similarity = exp((-specificity) .* distances);
 % This calculation returns activation of each category given each input.
 categoryactivation = similarity * memorystrength;
 
-% apply response mapping (gamma, phi) parameter, as per Nosofsky & Zaki
-% (2002)
+% apply response mapping (gamma) parameter, as per Nosofsky & Zaki (2002)
 categoryactivation = categoryactivation .^ responsemapping;
 
 % calculate classification probabilities via Luce's (1963) choice rule
